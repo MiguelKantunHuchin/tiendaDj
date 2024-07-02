@@ -1,0 +1,7 @@
+#
+tienda/applications/home/migrations/*
+#
+tienda/applications/users/migrations/*
+
+tienda/data.json
+tienda.fbkey.json

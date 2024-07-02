@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block css %}
+
+{% endblock css %}
+
+{% block js %}
+<!-- Insert this script at the bottom of the HTML, but before you use any Firebase services -->
+<!-- <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script> -->
+
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js'
+    import { GoogleAuthProvider, getAuth, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js'
+
+    // TODO: Replace the following with your app's Firebase project configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyA29pFZVHTYwFEBNl5pDQY5xEDs-uzke6U",
+        authDomain: "django-571a0.firebaseapp.com",
+        projectId: "django-571a0",
+        storageBucket: "django-571a0.appspot.com",
+        messagingSenderId: "365821983309",
+        appId: "1:365821983309:web:e48ab3b8d873b0bd347a04"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    console.log(app)
+
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth();
+
+    async function login() {
+
+        /***
+         * !No olvidar agregar la IP en firebase para que no bloquee el acceso, localhost !== 127.0.0.1
+         * 
+         * 
+         * 
+         * 
+        */
+
+        await signInWithPopup(auth, provider)
+            .then((result) => {
+                // This gives you a Google Access Token. You can use it to access the Google API.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.idToken;
+                // The signed-in user info.
+                const user = result.user;
+                // IdP data available using getAdditionalUserInfo(result)
+                //* Recuperar el id token del user
+                user.getIdToken().then(
+                    function (idToken) {
+                        console.log(idToken)
+
+                    }
+                ).catch(function (error) {
+                    //Handle eerror
+                })
+
+                // ...
+            }).catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // The email of the user's account used.
+                const email = error.customData.email;
+                // The AuthCredential type that was used.
+                const credential = GoogleAuthProvider.credentialFromError(error);
+
+                console.log(errorCode)
+                console.log(errorMessage)
+
+                console.log(credential)
+
+                // ...
+            });
+    }
+
+    window.login = login
+</script>
+
+
+
+{% endblock js %}
